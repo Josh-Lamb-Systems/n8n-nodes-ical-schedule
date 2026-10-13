@@ -1,0 +1,39 @@
+name: Publish to npm
+
+# Runs when you push a version tag (e.g. v0.1.0), or manually from the Actions tab.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # lets npm verify this workflow (trusted publishing + provenance)
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24 # ships npm 11, needed for trusted publishing
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+      - run: npm test
+
+      - name: Check the tag matches package.json
+        if: github.ref_type == 'tag'
+        run: |
+          PKG="$(node -p "require('./package.json').version")"
+          if [ "${GITHUB_REF_NAME#v}" != "$PKG" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $PKG"; exit 1
+          fi
+
+      - run: npm publish --provenance --access public
+        env:
+          # Only needed for the very first publish (before trusted publishing is set up).
+          # Afterwards you can delete the NPM_TOKEN secret; npm uses the workflow's identity instead.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
