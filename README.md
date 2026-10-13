@@ -4,32 +4,6 @@ An n8n community node that reads an iCal (.ics) feed and returns the appointment
 
 The parser is a TypeScript port of the PHP iCal parser used by [trmnl-calendar](https://github.com/zoltanhosszu/trmnl-calendar/tree/main/server). That parser is itself based on [seebz's gist](https://gist.github.com/seebz/c00a38d9520e035a6a8c). The port also includes the day grouping from trmnl-calendar's `index.php`. It has **no runtime dependencies**.
 
-Community nodes run inside the main n8n process, not in the Code-node task runner. That means no runner allowlist, no custom image and no Compose changes.
-
-## Install (no Docker Compose changes)
-
-### Option A: publish to npm, then install from the n8n UI
-
-```bash
-npm install
-npm run build
-npm publish            # or rename to @yourscope/n8n-nodes-ical-schedule and: npm publish --access public
-```
-
-Then, in n8n, as owner or admin: **Settings → Community Nodes → Install**, enter `n8n-nodes-ical-schedule`, tick the risk acknowledgement, and click **Install**.
-
-### Option B: install the tarball straight into the running container
-
-This puts the package in the same folder the UI installer uses (`~/.n8n/nodes`). That folder sits on your existing n8n data volume, so the install survives restarts and image upgrades.
-
-```bash
-docker cp n8n-nodes-ical-schedule-0.1.0.tgz <n8n-container>:/tmp/
-docker exec -u node <n8n-container> sh -c \
-  'mkdir -p ~/.n8n/nodes && cd ~/.n8n/nodes && [ -f package.json ] || echo "{\"name\":\"installed-nodes\",\"private\":true}" > package.json; npm install /tmp/n8n-nodes-ical-schedule-0.1.0.tgz'
-docker restart <n8n-container>
-```
-
-The node then appears as **iCal Schedule** in the node panel. To update, repeat with the new `.tgz`.
 
 ## Using it
 
