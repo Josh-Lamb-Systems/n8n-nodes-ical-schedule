@@ -30,7 +30,7 @@
   "bugs": {
     "url": "https://github.com/Josh-Lamb-Systems/n8n-nodes-ical-schedule/issues"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.20.5",
     "n8n-workflow": "^2.16.0",
