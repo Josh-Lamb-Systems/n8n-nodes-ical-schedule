@@ -22,6 +22,14 @@
     "name": "Josh Lamb",
     "email": "web@talmao.org"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Josh-Lamb-Systems/n8n-nodes-ical-schedule.git"
+  },
+  "homepage": "https://github.com/Josh-Lamb-Systems/n8n-nodes-ical-schedule#readme",
+  "bugs": {
+    "url": "https://github.com/Josh-Lamb-Systems/n8n-nodes-ical-schedule/issues"
+  },
   "license": "UNLICENSED",
   "devDependencies": {
     "@types/node": "^22.20.5",
