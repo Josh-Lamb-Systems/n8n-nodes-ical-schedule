@@ -3,3 +3,4 @@ dist/
 *.tgz
 test/parity/out/
 test/parity/ical.php
+.DS_Store
