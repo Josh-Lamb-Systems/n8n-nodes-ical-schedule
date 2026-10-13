@@ -1,0 +1,47 @@
+{
+  "name": "n8n-nodes-ical-schedule",
+  "version": "0.1.0",
+  "description": "n8n community node: today's (or the next few days') appointments from an iCal feed. Dependency-free port of the trmnl-calendar PHP iCal parser.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p . && node -e \"require('fs').copyFileSync('src/nodes/IcalSchedule/icalSchedule.svg','dist/nodes/IcalSchedule/icalSchedule.svg')\"",
+    "test": "npm run build && node --test test/fixes.test.js",
+    "prepack": "npm run build",
+    "test:parity": "bash test/parity/run.sh"
+  },
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "ical",
+    "ics",
+    "calendar",
+    "schedule",
+    "appointments"
+  ],
+  "author": {
+    "name": "Josh Lamb",
+    "email": "josh@joshlambsystems.com"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "n8n-workflow": "^2.16.0",
+    "typescript": "^5.9.3"
+  },
+  "files": [
+    "dist/nodes",
+    "dist/ical",
+    "index.js",
+    "README.md"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "nodes": [
+      "dist/nodes/IcalSchedule/IcalSchedule.node.js"
+    ],
+    "credentials": []
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}

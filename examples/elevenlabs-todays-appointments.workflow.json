@@ -1,0 +1,82 @@
+{
+  "name": "ElevenLabs – today’s appointments",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "todays-appointments",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "w1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "5e7b1c2a-6d4f-4a8e-9b3c-2f1e0d9c8b7a"
+    },
+    {
+      "parameters": {
+        "url": "https://REPLACE-WITH-YOUR-SECRET-ICAL-URL.ics",
+        "range": "today",
+        "output": "summary",
+        "options": {
+          "timeZone": "America/New_York"
+        }
+      },
+      "id": "w2",
+      "name": "iCal Schedule",
+      "type": "n8n-nodes-ical-schedule.icalSchedule",
+      "typeVersion": 1,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {}
+      },
+      "id": "w3",
+      "name": "Respond to ElevenLabs",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "iCal Schedule",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "iCal Schedule": {
+      "main": [
+        [
+          {
+            "node": "Respond to ElevenLabs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
