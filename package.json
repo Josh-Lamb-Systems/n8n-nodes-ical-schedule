@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-ical-schedule",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "n8n community node: today's (or the next few days') appointments from an iCal feed. Dependency-free port of the trmnl-calendar PHP iCal parser.",
   "main": "index.js",
   "scripts": {

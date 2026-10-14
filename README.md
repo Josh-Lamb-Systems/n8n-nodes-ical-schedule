@@ -14,6 +14,7 @@ The parser is a TypeScript port of the PHP iCal parser used by [trmnl-calendar](
 | **Output** | *Summary* (one item, ready for a voice agent) · *One Item per Day* (trmnl-calendar shape) · *One Item per Event*. |
 | Options → **Time Zone** | Decides what "today" is and how times are shown. Empty = the workflow's time zone. |
 | Options → Include All-Day Events, Skip Cancelled Events, Include Descriptions, Time Format (12h/24h) | |
+| Options → **Timeout (ms)** | How long to wait for the feed (default 15000). For a feed that is sometimes slow, set a short timeout (e.g. 5000) and turn on Settings → Retry On Fail. |
 | Options → **Match Original PHP Output Exactly** | Turns off every bug fix listed below. Only for comparing results. |
 
 Summary output for "Today":

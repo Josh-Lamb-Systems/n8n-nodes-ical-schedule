@@ -150,6 +150,15 @@ export class IcalSchedule implements INodeType {
 						description: 'Format for the "time" fields and the summary sentence',
 					},
 					{
+						displayName: 'Timeout (ms)',
+						name: 'timeout',
+						type: 'number',
+						typeOptions: { minValue: 1 },
+						default: 15000,
+						description:
+							'How long to wait for the feed before giving up. Combine a short timeout with Settings → Retry On Fail to retry slow requests.',
+					},
+					{
 						displayName: 'Match Original PHP Output Exactly',
 						name: 'phpCompat',
 						type: 'boolean',
@@ -178,6 +187,7 @@ export class IcalSchedule implements INodeType {
 					skipCancelled?: boolean;
 					includeDescription?: boolean;
 					timeFormat?: '12h' | '24h';
+					timeout?: number;
 					phpCompat?: boolean;
 				};
 
@@ -195,14 +205,26 @@ export class IcalSchedule implements INodeType {
 						throw new NodeOperationError(this.getNode(), 'Feed URL must start with https://, http:// or webcal://', { itemIndex: i });
 					}
 					if (!feedCache.has(url)) {
-						const body = await this.helpers.httpRequest({
-							method: 'GET',
-							url,
-							json: false,
-							encoding: 'text',
-							timeout: 15000,
-							headers: { Accept: 'text/calendar, text/plain;q=0.9, */*;q=0.1' },
-						});
+						const timeout = Math.max(1, Math.floor(options.timeout ?? 15000));
+						let body: unknown;
+						try {
+							body = await this.helpers.httpRequest({
+								method: 'GET',
+								url,
+								json: false,
+								encoding: 'text',
+								timeout,
+								headers: { Accept: 'text/calendar, text/plain;q=0.9, */*;q=0.1' },
+							});
+						} catch (error) {
+							if ((error as { code?: string }).code === 'ECONNABORTED' || /timeout of \d+ms exceeded/.test((error as Error).message)) {
+								throw new NodeOperationError(this.getNode(), `The feed did not respond within ${timeout} ms`, {
+									itemIndex: i,
+									description: 'Raise Options → Timeout (ms), or turn on Settings → Retry On Fail to try again.',
+								});
+							}
+							throw error;
+						}
 						feedCache.set(url, typeof body === 'string' ? body : Buffer.isBuffer(body) ? body.toString('utf8') : String(body));
 					}
 					ics = feedCache.get(url)!;
